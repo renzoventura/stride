@@ -1,16 +1,16 @@
-# LastK
+# Stride
 
 **Your performance. Beautifully presented.**
 
-Every runner is an artist. Every run a canvas. LastK is just the brush.
+Every runner is an artist. Every run a canvas. Stride is just the brush.
 
 https://github.com/user-attachments/assets/0beaf45c-fbfe-4d19-985d-9008ee2cae51
 
 ---
 
-## What is LastK?
+## What is Stride?
 
-LastK connects to Strava, pulls your run data, and transforms it into premium share-ready graphics.
+Stride connects to Strava, pulls your run data, and transforms it into premium share-ready graphics.
 
 Pick a run. Choose a photo. Add data-driven stickers — distance, pace, time, location, PRs — styled with intention. Export to your camera roll or share directly to Instagram Stories.
 
@@ -64,6 +64,25 @@ Every sticker is dynamically populated from the selected run.
 
 ---
 
+<<<<<<< HEAD
+=======
+## Philosophy
+
+Runners create meaning through effort.
+
+The distance, the pace, the time — these aren't just numbers.
+They're evidence of discipline. Of showing up. Of pushing through.
+
+Data deserves presentation.
+Performance is personal.
+Design amplifies achievement.
+
+Stride exists because the work was already done.
+It just needed a frame.
+
+---
+
+>>>>>>> ff03bfc (Rename project from LastK to Stride)
 ## Tech Stack
 
 ### Architecture
@@ -119,7 +138,7 @@ All visual constants live in `AppTheme.swift`:
 ## Project Structure
 
 ```
-lastk/
+Stride/
 ├── Strava/              Auth, API client, token store, models
 ├── Feed/                Run feed, cards, map snapshots, polyline decoder
 ├── Profile/             Athlete display
@@ -140,4 +159,14 @@ lastk/
 
 ---
 
+<<<<<<< HEAD
 *LastK — because the run was the hard part.*
+=======
+## Secrets
+
+Strava client ID and secret are never committed. They are read at runtime from environment variables (`STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET`) or a local `.xcconfig` added to `.gitignore`.
+
+---
+
+*Stride — because the run was the hard part.*
+>>>>>>> ff03bfc (Rename project from LastK to Stride)

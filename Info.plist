@@ -8,7 +8,7 @@
 		<string>ROUND8-FOUR.otf</string>
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>LastK needs access to your photos to let you choose a background image for your run cards.</string>
+	<string>Stride needs access to your photos to let you choose a background image for your run cards.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>strava</string>
