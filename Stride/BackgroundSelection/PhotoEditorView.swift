@@ -195,9 +195,10 @@ struct PhotoEditorView: View {
             guard let mapImage = await MapSnapshotService.makeSnapshot(
                 polyline: polyline,
                 size: size,
-                routeLineWidth: 4
+                routeLineWidth: 4,
+                mapOpacity: 0.5
             ) else { return }
-            await MainActor.run { addImageOverlay(image: mapImage, opacity: 0.75) }
+            await MainActor.run { addImageOverlay(image: mapImage) }
         }
     }
 

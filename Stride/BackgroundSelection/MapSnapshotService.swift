@@ -10,7 +10,7 @@ import UIKit
 
 struct MapSnapshotService {
     /// Generates a map snapshot with the route drawn on it at the given output size.
-    static func makeSnapshot(polyline: String, size: CGSize, routeLineWidth: CGFloat = 4) async -> UIImage? {
+    static func makeSnapshot(polyline: String, size: CGSize, routeLineWidth: CGFloat = 4, mapOpacity: CGFloat = 1) async -> UIImage? {
         let coords = PolylineDecoder.decode(polyline)
         guard !coords.isEmpty else { return nil }
 
@@ -28,7 +28,7 @@ struct MapSnapshotService {
                     continuation.resume(returning: nil)
                     return
                 }
-                continuation.resume(returning: drawRoute(on: snapshot, coordinates: coords, lineWidth: routeLineWidth))
+                continuation.resume(returning: drawRoute(on: snapshot, coordinates: coords, lineWidth: routeLineWidth, mapOpacity: mapOpacity))
             }
         }
     }
@@ -59,11 +59,14 @@ struct MapSnapshotService {
     private static func drawRoute(
         on snapshot: MKMapSnapshotter.Snapshot,
         coordinates: [CLLocationCoordinate2D],
-        lineWidth: CGFloat
+        lineWidth: CGFloat,
+        mapOpacity: CGFloat
     ) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: snapshot.image.size)
         return renderer.image { context in
+            context.cgContext.setAlpha(mapOpacity)
             snapshot.image.draw(at: .zero)
+            context.cgContext.setAlpha(1)
             let rect = CGRect(origin: .zero, size: snapshot.image.size)
             context.cgContext.setFillColor(CGColor(red: 0.1, green: 0.1, blue: 0.12, alpha: 0.4))
             context.cgContext.fill(rect)
