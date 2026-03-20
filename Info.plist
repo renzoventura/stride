@@ -2,30 +2,30 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
+	<key>CFBundleURLTypes</key>
 	<array>
-		<string>Humane-Bold.otf</string>
-		<string>ROUND8-FOUR.otf</string>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.renzoventura.stride</string>
+			<key>CFBundleURLRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>stride</string>
+			</array>
+		</dict>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Stride needs access to your photos to let you choose a background image for your run cards.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>strava</string>
 		<string>instagram-stories</string>
 	</array>
-	<key>CFBundleURLTypes</key>
+	<key>MKDirectionsApplicationSupportedModes</key>
+	<array/>
+	<key>UIAppFonts</key>
 	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>com.pacepal</string>
-			<key>CFBundleURLRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>pacepal</string>
-			</array>
-		</dict>
+		<string>Humane-Bold.otf</string>
+		<string>ROUND8-FOUR.otf</string>
 	</array>
 </dict>
 </plist>
