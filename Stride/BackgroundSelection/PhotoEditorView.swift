@@ -43,6 +43,7 @@ struct PhotoEditorView: View {
     @State private var isSaving = false
     @State private var saveSuccess = false
     @State private var shareItem: ShareableImage?
+    @State private var isDraggingSticker = false
 
     @Environment(\.displayScale) private var displayScale
 
@@ -55,6 +56,9 @@ struct PhotoEditorView: View {
                 scaleMultiplier: $scaleMultiplier,
                 offset: $offset,
                 stickers: stickers,
+                onStickerDragStarted: {
+                    withAnimation(.spring(duration: 0.25)) { isDraggingSticker = true }
+                },
                 onStickerUpdate: { id, position, scale in
                     updateSticker(id: id, position: position, scale: scale)
                 },
@@ -76,6 +80,7 @@ struct PhotoEditorView: View {
         .overlay {
             EditorOverlayButtons(
                 bottomBarHeight: EditorBottomActionView.height,
+                isDraggingSticker: isDraggingSticker,
                 onClose: onDismiss,
                 onAddSticker: { showStickerPicker = true }
             )
@@ -124,9 +129,25 @@ struct PhotoEditorView: View {
     }
 
     private func updateSticker(id: UUID, position: CGPoint, scale: CGFloat) {
+        defer {
+            withAnimation(.spring(duration: 0.25)) { isDraggingSticker = false }
+        }
+        if isDraggingSticker && isInTrashZone(position) {
+            stickers.removeAll { $0.id == id }
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            return
+        }
         guard let index = stickers.firstIndex(where: { $0.id == id }) else { return }
         stickers[index].position = position
         stickers[index].scale = scale
+    }
+
+    private func isInTrashZone(_ point: CGPoint) -> Bool {
+        // Trash button sits at bottom-center, buttonRadius(26) + md(16) above the canvas bottom
+        let trashCenter = CGPoint(x: canvasSize.width / 2, y: canvasSize.height - 42)
+        let dx = point.x - trashCenter.x
+        let dy = point.y - trashCenter.y
+        return sqrt(dx * dx + dy * dy) < 60
     }
 
     // MARK: - Export

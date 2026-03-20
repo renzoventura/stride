@@ -10,6 +10,7 @@ import SwiftUI
 /// Floating buttons rendered as an overlay above the canvas and bottom bar.
 struct EditorOverlayButtons: View {
     let bottomBarHeight: CGFloat
+    let isDraggingSticker: Bool
     let onClose: () -> Void
     let onAddSticker: () -> Void
 
@@ -41,12 +42,15 @@ struct EditorOverlayButtons: View {
     }
 
     private var addStickerButton: some View {
-        Button(action: onAddSticker) {
-            Image(systemName: "plus")
-                .font(.system(size: 20, weight: .bold))
+        Button(action: isDraggingSticker ? {} : onAddSticker) {
+            Image(systemName: isDraggingSticker ? "trash" : "plus")
+                .font(.system(size: isDraggingSticker ? 18 : 20, weight: .bold))
+                .foregroundStyle(isDraggingSticker ? AppColors.accent : .white)
+                .contentTransition(.symbolEffect(.replace))
         }
         .buttonStyle(FloatingCircleButtonStyle(size: 52))
         .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
-        .accessibilityLabel("Add sticker")
+        .animation(.spring(duration: 0.25), value: isDraggingSticker)
+        .accessibilityLabel(isDraggingSticker ? "Drag here to delete" : "Add sticker")
     }
 }

@@ -19,6 +19,7 @@ struct EditingCanvasView: View {
     @Binding var scaleMultiplier: CGFloat
     @Binding var offset: CGSize
     let stickers: [StickerItem]
+    let onStickerDragStarted: () -> Void
     let onStickerUpdate: (UUID, CGPoint, CGFloat) -> Void
     let onCanvasSizeChange: (CGSize) -> Void
 
@@ -63,6 +64,7 @@ struct EditingCanvasView: View {
                         StickerOverlayView(
                             sticker: sticker,
                             canvasSize: canvasSize,
+                            onDragStarted: onStickerDragStarted,
                             onUpdate: { newPosition, newScale in
                                 onStickerUpdate(sticker.id, newPosition, newScale)
                             }

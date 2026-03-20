@@ -12,12 +12,14 @@ import SwiftUI
 struct StickerOverlayView: View {
     let sticker: StickerItem
     let canvasSize: CGSize
+    let onDragStarted: () -> Void
     let onUpdate: (CGPoint, CGFloat) -> Void
 
     private let minScale: CGFloat = 0.4
     private let maxScale: CGFloat = 3
 
     @State private var dragOffset: CGSize = .zero
+    @State private var isDragging = false
     @State private var scaleAtPinchStart: CGFloat?
     @State private var appeared = false
     @State private var glowActive = false
@@ -55,9 +57,14 @@ struct StickerOverlayView: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
+                        if !isDragging {
+                            isDragging = true
+                            onDragStarted()
+                        }
                         dragOffset = value.translation
                     }
                     .onEnded { _ in
+                        isDragging = false
                         onUpdate(effectivePosition, sticker.scale)
                         dragOffset = .zero
                     }
