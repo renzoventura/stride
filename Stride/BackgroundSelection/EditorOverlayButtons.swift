@@ -16,6 +16,7 @@ struct EditorOverlayButtons: View {
     let onOpenGallery: () -> Void
     let onAddMap4x5: () -> Void
     let onAddMap1x1: () -> Void
+    let onAddRoute: () -> Void
 
     var body: some View {
         ZStack {
@@ -71,6 +72,9 @@ struct EditorOverlayButtons: View {
                     }
                     Button("1:1", systemImage: "square") {
                         onAddMap1x1()
+                    }
+                    Button("Route", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath") {
+                        onAddRoute()
                     }
                 } label: {
                     Label("Maps", systemImage: "map")

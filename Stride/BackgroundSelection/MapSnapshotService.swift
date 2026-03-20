@@ -12,8 +12,14 @@ struct MapSnapshotService {
     /// Generates a map snapshot with the route drawn on it at the given output size.
     /// Single-image snapshot (background picker). Polyline baked in at full opacity.
     static func makeSnapshot(polyline: String, size: CGSize, routeLineWidth: CGFloat = 4) async -> UIImage? {
-        guard let (base, _) = await makeLayeredSnapshot(polyline: polyline, size: size, routeLineWidth: routeLineWidth) else { return nil }
-        return base
+        guard let (base, polylineImage) = await makeLayeredSnapshot(polyline: polyline, size: size, routeLineWidth: routeLineWidth) else { return nil }
+        let format = UIGraphicsImageRendererFormat()
+        format.opaque = true
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        return renderer.image { _ in
+            base.draw(at: .zero)
+            polylineImage.draw(at: .zero)
+        }
     }
 
     /// Two-image snapshot for canvas overlays: base map (no polyline) + polyline-only image.

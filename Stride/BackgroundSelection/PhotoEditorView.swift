@@ -98,7 +98,8 @@ struct PhotoEditorView: View {
                 onAddSticker: { showStickerPicker = true },
                 onOpenGallery: { showGalleryPicker = true },
                 onAddMap4x5: { addMapOverlay(size: CGSize(width: 800, height: 1000)) },
-                onAddMap1x1: { addMapOverlay(size: CGSize(width: 800, height: 800)) }
+                onAddMap1x1: { addMapOverlay(size: CGSize(width: 800, height: 800)) },
+                onAddRoute: { addRouteOverlay() }
             )
         }
         .overlay {
@@ -214,6 +215,20 @@ struct PhotoEditorView: View {
             ) else { return }
             await MainActor.run {
                 addImageOverlay(image: layers.base, topImage: layers.polyline, opacity: 0.5)
+            }
+        }
+    }
+
+    private func addRouteOverlay() {
+        guard let polyline = runItem.polyline, !polyline.isEmpty else { return }
+        Task {
+            guard let layers = await MapSnapshotService.makeOverlaySnapshot(
+                polyline: polyline,
+                size: CGSize(width: 800, height: 800),
+                routeLineWidth: 6
+            ) else { return }
+            await MainActor.run {
+                addImageOverlay(image: layers.polyline)
             }
         }
     }
