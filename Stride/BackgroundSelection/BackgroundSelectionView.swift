@@ -159,36 +159,29 @@ private struct MapBackgroundTab: View {
     let onSelect: (UIImage) -> Void
 
     @State private var snapshot: UIImage?
-    @State private var isLoading = false
 
     var body: some View {
-        Group {
+        ZStack {
             if let polyline, !polyline.isEmpty {
-                if isLoading {
-                    VStack {
-                        Spacer()
-                        ProgressView("Generating map…")
-                            .tint(AppColors.accent)
-                            .foregroundStyle(AppColors.textSecondary)
-                        Spacer()
+                if let snapshot {
+                    Button {
+                        onSelect(snapshot)
+                    } label: {
+                        Image(uiImage: snapshot)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: AppRadius.md)
+                                    .strokeBorder(AppColors.surfaceElevated, lineWidth: 1)
+                            )
+                            .padding(AppSpacing.md)
                     }
-                } else if let snapshot {
-                    ScrollView {
-                        Button {
-                            onSelect(snapshot)
-                        } label: {
-                            Image(uiImage: snapshot)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: AppRadius.md)
-                                        .strokeBorder(AppColors.surfaceElevated, lineWidth: 1)
-                                )
-                        }
-                        .buttonStyle(.plain)
-                        .padding(AppSpacing.md)
-                    }
+                    .buttonStyle(.plain)
+                } else {
+                    ProgressView("Generating map…")
+                        .tint(AppColors.accent)
+                        .foregroundStyle(AppColors.textSecondary)
                 }
             } else {
                 ContentUnavailableView(
@@ -202,9 +195,7 @@ private struct MapBackgroundTab: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .task {
             guard let polyline, !polyline.isEmpty, snapshot == nil else { return }
-            isLoading = true
             snapshot = await makeSnapshot(polyline: polyline)
-            isLoading = false
         }
     }
 
