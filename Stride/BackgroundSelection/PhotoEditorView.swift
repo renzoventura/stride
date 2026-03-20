@@ -197,7 +197,7 @@ struct PhotoEditorView: View {
                 size: size,
                 routeLineWidth: 4
             ) else { return }
-            await MainActor.run { addImageOverlay(image: mapImage, opacity: 0.5) }
+            await MainActor.run { addImageOverlay(image: mapImage, opacity: 0.75) }
         }
     }
 
