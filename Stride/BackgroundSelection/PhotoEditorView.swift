@@ -47,7 +47,7 @@ struct PhotoEditorView: View {
     @State private var saveSuccess = false
     @State private var shareItem: ShareableImage?
     @State private var isDraggingSticker = false
-    @State private var activeOverlayID: UUID?
+    @State private var nextZOrder: Int = 0
 
     @Environment(\.displayScale) private var displayScale
 
@@ -61,16 +61,15 @@ struct PhotoEditorView: View {
                 offset: $offset,
                 stickers: stickers,
                 imageOverlays: imageOverlays,
-                activeOverlayID: activeOverlayID,
                 onStickerDragStarted: { id in
-                    activeOverlayID = id
+                    bringToFront(stickerID: id)
                     withAnimation(.spring(duration: 0.25)) { isDraggingSticker = true }
                 },
                 onStickerUpdate: { id, position, scale in
                     updateSticker(id: id, position: position, scale: scale)
                 },
                 onImageOverlayDragStarted: { id in
-                    activeOverlayID = id
+                    bringToFront(overlayID: id)
                     withAnimation(.spring(duration: 0.25)) { isDraggingSticker = true }
                 },
                 onImageOverlayUpdate: { id, position, scale in
@@ -144,14 +143,13 @@ struct PhotoEditorView: View {
 
     private func addSticker(option: RunStickerOption) {
         let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
-        let item = StickerItem(layoutType: option.layoutType, data: runItem.stickerData, position: center)
+        let item = StickerItem(layoutType: option.layoutType, data: runItem.stickerData, position: center, zOrder: nextZOrder)
+        nextZOrder += 1
         stickers.append(item)
-        activeOverlayID = item.id
     }
 
     private func updateSticker(id: UUID, position: CGPoint, scale: CGFloat) {
         defer {
-            activeOverlayID = nil
             withAnimation(.spring(duration: 0.25)) { isDraggingSticker = false }
         }
         if isDraggingSticker && isInTrashZone(position) {
@@ -172,9 +170,20 @@ struct PhotoEditorView: View {
         return sqrt(dx * dx + dy * dy) < 60
     }
 
+    private func bringToFront(stickerID id: UUID) {
+        guard let index = stickers.firstIndex(where: { $0.id == id }) else { return }
+        stickers[index].zOrder = nextZOrder
+        nextZOrder += 1
+    }
+
+    private func bringToFront(overlayID id: UUID) {
+        guard let index = imageOverlays.firstIndex(where: { $0.id == id }) else { return }
+        imageOverlays[index].zOrder = nextZOrder
+        nextZOrder += 1
+    }
+
     private func updateImageOverlay(id: UUID, position: CGPoint, scale: CGFloat) {
         defer {
-            activeOverlayID = nil
             withAnimation(.spring(duration: 0.25)) { isDraggingSticker = false }
         }
         if isDraggingSticker && isInTrashZone(position) {
@@ -190,9 +199,9 @@ struct PhotoEditorView: View {
     private func addImageOverlay(image: UIImage, topImage: UIImage? = nil, opacity: Double = 1) {
         let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
         let initialScale = canvasSize.width > 0 ? (canvasSize.width * 0.5) / 300 : 1
-        let item = ImageOverlayItem(image: image, topImage: topImage, position: center, scale: initialScale, opacity: opacity)
+        let item = ImageOverlayItem(image: image, topImage: topImage, position: center, scale: initialScale, opacity: opacity, zOrder: nextZOrder)
+        nextZOrder += 1
         imageOverlays.append(item)
-        activeOverlayID = item.id
     }
 
     private func addMapOverlay(size: CGSize) {

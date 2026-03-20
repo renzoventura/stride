@@ -17,13 +17,16 @@ struct ImageOverlayItem: Identifiable {
     var position: CGPoint
     var scale: CGFloat
     var opacity: Double
+    /// Global z-order used to layer items across stickers and image overlays.
+    var zOrder: Int
 
-    init(id: UUID = UUID(), image: UIImage, topImage: UIImage? = nil, position: CGPoint, scale: CGFloat = 1, opacity: Double = 1) {
+    init(id: UUID = UUID(), image: UIImage, topImage: UIImage? = nil, position: CGPoint, scale: CGFloat = 1, opacity: Double = 1, zOrder: Int = 0) {
         self.id = id
         self.image = image
         self.topImage = topImage
         self.position = position
         self.scale = scale
         self.opacity = opacity
+        self.zOrder = zOrder
     }
 }

@@ -11,26 +11,26 @@ import CoreGraphics
 
 struct StickerItem: Identifiable, Equatable {
     let id: UUID
-    /// Which visual layout to render.
     var layoutType: StickerLayoutType
-    /// Snapshot of run metrics used by the layout view.
     var data: StickerData
-    /// Center position in canvas coordinates.
     var position: CGPoint
-    /// Scale factor (1 = default size).
     var scale: CGFloat
+    /// Global z-order used to layer items across stickers and image overlays.
+    var zOrder: Int
 
     init(
         id: UUID = UUID(),
         layoutType: StickerLayoutType,
         data: StickerData,
         position: CGPoint,
-        scale: CGFloat = 1
+        scale: CGFloat = 1,
+        zOrder: Int = 0
     ) {
         self.id = id
         self.layoutType = layoutType
         self.data = data
         self.position = position
         self.scale = scale
+        self.zOrder = zOrder
     }
 }

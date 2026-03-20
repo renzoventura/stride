@@ -20,7 +20,6 @@ struct EditingCanvasView: View {
     @Binding var offset: CGSize
     let stickers: [StickerItem]
     let imageOverlays: [ImageOverlayItem]
-    let activeOverlayID: UUID?
     let onStickerDragStarted: (UUID) -> Void
     let onStickerUpdate: (UUID, CGPoint, CGFloat) -> Void
     let onImageOverlayDragStarted: (UUID) -> Void
@@ -73,7 +72,7 @@ struct EditingCanvasView: View {
                                 onStickerUpdate(sticker.id, newPosition, newScale)
                             }
                         )
-                        .zIndex(sticker.id == activeOverlayID ? 1000 : 0)
+                        .zIndex(Double(sticker.zOrder))
                     }
                     ForEach(imageOverlays) { overlay in
                         ImageOverlayView(
@@ -83,7 +82,7 @@ struct EditingCanvasView: View {
                                 onImageOverlayUpdate(overlay.id, newPosition, newScale)
                             }
                         )
-                        .zIndex(overlay.id == activeOverlayID ? 1000 : 0)
+                        .zIndex(Double(overlay.zOrder))
                     }
                 }
             }
