@@ -1,21 +1,12 @@
 # Stride
 
-**Your performance. Beautifully presented.**
+**Your performance is art. Stride is the brush.**
 
-Every runner is an artist. Every run a canvas. Stride is just the brush.
+Transforms Strava API run data into premium, share-ready graphics: choose a run, add data-driven stickers, overlay on a photo, and export to Instagram or your camera roll.
+
+`SwiftUI` `@Observable` `MapKit` `Strava API` `Interactive Photo Editor` `Gestures & Stickers` `async/await` `Keychain` `iOS 26+`
 
 https://github.com/user-attachments/assets/0beaf45c-fbfe-4d19-985d-9008ee2cae51
-
----
-
-## What is Stride?
-
-Stride connects to Strava, pulls your run data, and transforms it into premium share-ready graphics.
-
-Pick a run. Choose a photo. Add data-driven stickers — distance, pace, time, location, PRs — styled with intention. Export to your camera roll or share directly to Instagram Stories.
-
-No tracking. No dashboards. No noise.
-Just your performance, presented the way it deserves.
 
 ---
 
@@ -60,29 +51,9 @@ Every sticker is dynamically populated from the selected run.
 - Centralized color, typography, spacing, and corner radius tokens
 - Four reusable button styles: Accent, Accent Outline, Ghost, Floating Circle
 - Custom display fonts: Humane Bold, ROUND8-FOUR
-- Built for future light mode
 
 ---
 
-<<<<<<< HEAD
-=======
-## Philosophy
-
-Runners create meaning through effort.
-
-The distance, the pace, the time — these aren't just numbers.
-They're evidence of discipline. Of showing up. Of pushing through.
-
-Data deserves presentation.
-Performance is personal.
-Design amplifies achievement.
-
-Stride exists because the work was already done.
-It just needed a frame.
-
----
-
->>>>>>> ff03bfc (Rename project from LastK to Stride)
 ## Tech Stack
 
 ### Architecture
@@ -156,17 +127,3 @@ Stride/
 - iOS 26+
 - Strava account
 - Photo library access
-
----
-
-<<<<<<< HEAD
-*LastK — because the run was the hard part.*
-=======
-## Secrets
-
-Strava client ID and secret are never committed. They are read at runtime from environment variables (`STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET`) or a local `.xcconfig` added to `.gitignore`.
-
----
-
-*Stride — because the run was the hard part.*
->>>>>>> ff03bfc (Rename project from LastK to Stride)
