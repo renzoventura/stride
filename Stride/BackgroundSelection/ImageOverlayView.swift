@@ -34,6 +34,7 @@ struct ImageOverlayView: View {
             .resizable()
             .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
             .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
+            .opacity(item.opacity)
             .scaleEffect(item.scale)
             .position(effectivePosition)
             .highPriorityGesture(
@@ -73,6 +74,7 @@ struct ImageOverlayDrawingView: View {
             .resizable()
             .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
             .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
+            .opacity(item.opacity)
             .scaleEffect(item.scale)
             .position(item.position)
     }

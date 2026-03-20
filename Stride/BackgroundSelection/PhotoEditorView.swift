@@ -183,11 +183,10 @@ struct PhotoEditorView: View {
         imageOverlays[index].scale = scale
     }
 
-    private func addImageOverlay(image: UIImage) {
+    private func addImageOverlay(image: UIImage, opacity: Double = 1) {
         let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
-        // Scale so the overlay starts at ~50% of the canvas width
         let initialScale = canvasSize.width > 0 ? (canvasSize.width * 0.5) / 300 : 1
-        imageOverlays.append(ImageOverlayItem(image: image, position: center, scale: initialScale))
+        imageOverlays.append(ImageOverlayItem(image: image, position: center, scale: initialScale, opacity: opacity))
     }
 
     private func addMapOverlay(size: CGSize) {
@@ -198,7 +197,7 @@ struct PhotoEditorView: View {
                 size: size,
                 routeLineWidth: 4
             ) else { return }
-            await MainActor.run { addImageOverlay(image: mapImage) }
+            await MainActor.run { addImageOverlay(image: mapImage, opacity: 0.5) }
         }
     }
 
