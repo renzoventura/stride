@@ -38,7 +38,7 @@ struct AthleteView: View {
     }
 }
 
-/// Profile content (header, details). Dark theme with card surfaces.
+/// Profile content. Dark theme with card surfaces.
 struct AthleteContentView: View {
     let athlete: StravaAthleteSummary
     let onLogOut: () -> Void
@@ -46,7 +46,6 @@ struct AthleteContentView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
             profileHeader
-            detailsSection
         }
         .padding(AppSpacing.md)
     }
@@ -59,6 +58,11 @@ struct AthleteContentView: View {
                 Text(athlete.firstname + " " + athlete.lastname)
                     .font(AppFont.metricMedium)
                     .foregroundStyle(AppColors.textPrimary)
+                if let city = athlete.city, !city.isEmpty {
+                    Text(city)
+                        .font(AppFont.metadata)
+                        .foregroundStyle(AppColors.textSecondary)
+                }
                 if athlete.premium == true {
                     Text("Strava Premium")
                         .font(AppFont.metadata)
@@ -69,40 +73,6 @@ struct AthleteContentView: View {
         }
         .padding(AppSpacing.md)
         .themedCard()
-    }
-
-    private var detailsSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
-            Text("Details")
-                .font(AppFont.sectionHeader)
-                .foregroundStyle(AppColors.textPrimary)
-
-            if let city = athlete.city, !city.isEmpty {
-                detailRow(label: "City", value: city)
-            }
-            if let state = athlete.state, !state.isEmpty {
-                detailRow(label: "State", value: state)
-            }
-            if let country = athlete.country, !country.isEmpty {
-                detailRow(label: "Country", value: country)
-            }
-            detailRow(label: "Athlete ID", value: String(athlete.id))
-        }
-        .padding(AppSpacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .themedCard()
-    }
-
-    private func detailRow(label: String, value: String) -> some View {
-        HStack {
-            Text(label)
-                .font(AppFont.secondary)
-                .foregroundStyle(AppColors.textSecondary)
-            Spacer()
-            Text(value)
-                .font(AppFont.secondary)
-                .foregroundStyle(AppColors.textPrimary)
-        }
     }
 }
 
