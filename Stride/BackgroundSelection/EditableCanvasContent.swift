@@ -47,6 +47,7 @@ struct ExportCanvasContent: View {
     let scale: CGFloat
     let offset: CGSize
     let stickers: [StickerItem]
+    let imageOverlays: [ImageOverlayItem]
     let canvasSize: CGSize
 
     var body: some View {
@@ -57,6 +58,9 @@ struct ExportCanvasContent: View {
                 offset: offset,
                 canvasSize: canvasSize
             )
+            ForEach(imageOverlays) { overlay in
+                ImageOverlayDrawingView(item: overlay)
+            }
             ForEach(stickers) { sticker in
                 StickerDrawingView(sticker: sticker)
             }

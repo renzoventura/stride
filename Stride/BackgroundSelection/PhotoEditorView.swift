@@ -14,6 +14,7 @@
 import SwiftUI
 import Photos
 import UIKit
+import MapKit
 
 // MARK: - Shareable wrapper
 
@@ -35,11 +36,13 @@ struct PhotoEditorView: View {
     @State private var scaleMultiplier: CGFloat = 1
     @State private var offset: CGSize = .zero
     @State private var stickers: [StickerItem] = []
+    @State private var imageOverlays: [ImageOverlayItem] = []
     @State private var canvasSize: CGSize = .zero
 
     // MARK: UI state
 
     @State private var showStickerPicker = false
+    @State private var showGalleryPicker = false
     @State private var isSaving = false
     @State private var saveSuccess = false
     @State private var shareItem: ShareableImage?
@@ -56,11 +59,18 @@ struct PhotoEditorView: View {
                 scaleMultiplier: $scaleMultiplier,
                 offset: $offset,
                 stickers: stickers,
+                imageOverlays: imageOverlays,
                 onStickerDragStarted: {
                     withAnimation(.spring(duration: 0.25)) { isDraggingSticker = true }
                 },
                 onStickerUpdate: { id, position, scale in
                     updateSticker(id: id, position: position, scale: scale)
+                },
+                onImageOverlayDragStarted: {
+                    withAnimation(.spring(duration: 0.25)) { isDraggingSticker = true }
+                },
+                onImageOverlayUpdate: { id, position, scale in
+                    updateImageOverlay(id: id, position: position, scale: scale)
                 },
                 onCanvasSizeChange: { newSize in
                     canvasSize = newSize
@@ -82,7 +92,10 @@ struct PhotoEditorView: View {
                 bottomBarHeight: EditorBottomActionView.height,
                 isDraggingSticker: isDraggingSticker,
                 onClose: onDismiss,
-                onAddSticker: { showStickerPicker = true }
+                onAddSticker: { showStickerPicker = true },
+                onOpenGallery: { showGalleryPicker = true },
+                onAddMap4x5: { addMapOverlay(size: CGSize(width: 800, height: 1000)) },
+                onAddMap1x1: { addMapOverlay(size: CGSize(width: 800, height: 800)) }
             )
         }
         .overlay {
@@ -102,6 +115,12 @@ struct PhotoEditorView: View {
                 onSelect: { addSticker(option: $0) },
                 onDismiss: { showStickerPicker = false }
             )
+        }
+        .sheet(isPresented: $showGalleryPicker) {
+            PHPickerRepresentable { image in
+                guard let image else { return }
+                addImageOverlay(image: image)
+            }
         }
     }
 
@@ -150,6 +169,39 @@ struct PhotoEditorView: View {
         return sqrt(dx * dx + dy * dy) < 60
     }
 
+    private func updateImageOverlay(id: UUID, position: CGPoint, scale: CGFloat) {
+        defer {
+            withAnimation(.spring(duration: 0.25)) { isDraggingSticker = false }
+        }
+        if isDraggingSticker && isInTrashZone(position) {
+            imageOverlays.removeAll { $0.id == id }
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            return
+        }
+        guard let index = imageOverlays.firstIndex(where: { $0.id == id }) else { return }
+        imageOverlays[index].position = position
+        imageOverlays[index].scale = scale
+    }
+
+    private func addImageOverlay(image: UIImage) {
+        let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
+        // Scale so the overlay starts at ~50% of the canvas width
+        let initialScale = canvasSize.width > 0 ? (canvasSize.width * 0.5) / 300 : 1
+        imageOverlays.append(ImageOverlayItem(image: image, position: center, scale: initialScale))
+    }
+
+    private func addMapOverlay(size: CGSize) {
+        guard let polyline = runItem.polyline, !polyline.isEmpty else { return }
+        Task {
+            guard let mapImage = await MapSnapshotService.makeSnapshot(
+                polyline: polyline,
+                size: size,
+                routeLineWidth: 4
+            ) else { return }
+            await MainActor.run { addImageOverlay(image: mapImage) }
+        }
+    }
+
     // MARK: - Export
 
     private func exportImage() -> UIImage? {
@@ -159,6 +211,7 @@ struct PhotoEditorView: View {
             scale: scaleMultiplier,
             offset: offset,
             stickers: stickers,
+            imageOverlays: imageOverlays,
             canvasSize: canvasSize
         )
         let renderer = ImageRenderer(content: content)
