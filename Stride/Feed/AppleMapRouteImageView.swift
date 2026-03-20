@@ -101,8 +101,11 @@ private struct AppleMapRouteImageContent: View {
         let options = MKMapSnapshotter.Options()
         options.region = region
         options.size = size
-        options.scale = 0
-        options.mapType = .mutedStandard
+        options.scale = 2
+        let config = MKStandardMapConfiguration(emphasisStyle: .muted)
+        config.pointOfInterestFilter = .excludingAll
+        config.showsTraffic = false
+        options.preferredConfiguration = config
         let snapshotter = MKMapSnapshotter(options: options)
         return await withCheckedContinuation { continuation in
             snapshotter.start { snapshot, error in

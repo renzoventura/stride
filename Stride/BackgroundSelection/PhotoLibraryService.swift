@@ -113,7 +113,7 @@ final class PhotoLibraryService {
 
     private func loadAssets(for album: PhotoAlbum) async {
         let options = PHFetchOptions()
-        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        options.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
         options.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
         let fetchResult: PHFetchResult<PHAsset>
         if let collection = album.assetCollection {
