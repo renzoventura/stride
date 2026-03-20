@@ -123,6 +123,7 @@ struct PRMinimalEliteSticker: View {
                 }
             }
         }
+        .background(Color.black.opacity(0.85), in: .rect(cornerRadius: 10))
     }
 }
 

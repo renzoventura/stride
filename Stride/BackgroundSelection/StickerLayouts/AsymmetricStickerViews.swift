@@ -123,6 +123,5 @@ struct SplitHighlightSticker: View {
             .padding(.trailing, 14)
             .padding(.vertical, 10)
         }
-        .background(Color.black.opacity(0.8), in: .rect(cornerRadius: 10))
     }
 }

@@ -27,13 +27,6 @@ struct StickerLayoutRouter: View {
         case .editorialFull: EditorialFullSticker(data: data)
         case .editorialDuo: EditorialDuoSticker(data: data)
         case .performanceCard: PerformanceCardSticker(data: data)
-        case .asymmetricLeft: AsymmetricLeftSticker(data: data)
-        case .asymmetricRight: AsymmetricRightSticker(data: data)
-        case .splitHighlight: SplitHighlightSticker(data: data)
-        case .locationStamp: LocationStampSticker(data: data)
-        case .minimalDistance: MinimalDistanceSticker(data: data)
-        case .minimalPace: MinimalPaceSticker(data: data)
-        case .dateRun: DateRunSticker(data: data)
         case .prBoldAnnouncement: PRBoldAnnouncementSticker(data: data)
         case .prMedal: PRMedalSticker(data: data)
         case .prMinimalElite: PRMinimalEliteSticker(data: data)
@@ -60,6 +53,5 @@ struct StickerBackground<Content: View>: View {
         content
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
-            .background(Color.black.opacity(0.8), in: .rect(cornerRadius: cornerRadius))
     }
 }

@@ -14,8 +14,6 @@ enum StickerCategory: String, CaseIterable {
     case bars = "Bars & Strips"
     case badges = "Badges"
     case editorial = "Editorial"
-    case compositions = "Compositions"
-    case minimal = "Minimal & Special"
     case prCelebration = "PR Celebration"
 }
 
@@ -43,17 +41,6 @@ enum StickerLayoutType: String, CaseIterable, Hashable, Identifiable {
     case editorialDuo
     case performanceCard
 
-    // Compositions
-    case asymmetricLeft
-    case asymmetricRight
-    case splitHighlight
-
-    // Minimal & Special
-    case locationStamp
-    case minimalDistance
-    case minimalPace
-    case dateRun
-
     // PR Celebration
     case prBoldAnnouncement
     case prMedal
@@ -76,13 +63,6 @@ enum StickerLayoutType: String, CaseIterable, Hashable, Identifiable {
         case .editorialFull: "Full Stats"
         case .editorialDuo: "Duo Stats"
         case .performanceCard: "Performance Card"
-        case .asymmetricLeft: "Asymmetric Left"
-        case .asymmetricRight: "Asymmetric Right"
-        case .splitHighlight: "Split Highlight"
-        case .locationStamp: "Location Stamp"
-        case .minimalDistance: "Minimal Distance"
-        case .minimalPace: "Minimal Pace"
-        case .dateRun: "Date Run"
         case .prBoldAnnouncement: "PR Announcement"
         case .prMedal: "PR Medal"
         case .prMinimalElite: "PR Elite"
@@ -98,8 +78,6 @@ enum StickerLayoutType: String, CaseIterable, Hashable, Identifiable {
         case .paceHero, .horizontalBar, .compactDuo: .bars
         case .distanceBadge, .longRunBadge, .prBadge: .badges
         case .editorialFull, .editorialDuo, .performanceCard: .editorial
-        case .asymmetricLeft, .asymmetricRight, .splitHighlight: .compositions
-        case .locationStamp, .minimalDistance, .minimalPace, .dateRun: .minimal
         case .prBoldAnnouncement, .prMedal, .prMinimalElite,
              .prChampionship, .prHighlightFrame, .prCompactSocial: .prCelebration
         }
@@ -111,14 +89,12 @@ enum StickerLayoutType: String, CaseIterable, Hashable, Identifiable {
     /// Whether this layout requires specific data to be present.
     func isAvailable(for data: StickerData) -> Bool {
         switch self {
-        case .bigPace, .paceHero, .compactDuo, .minimalPace, .splitHighlight:
+        case .bigPace, .paceHero, .compactDuo:
             return data.paceDisplay != nil
         case .horizontalBar, .performanceCard, .editorialFull:
             return data.paceDisplay != nil
         case .longRunBadge:
             return data.isLongRun
-        case .locationStamp:
-            return data.locationDisplay != nil
         // PR stickers are always available — user decides when it's a PR
         default:
             return true
