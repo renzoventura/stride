@@ -6,7 +6,18 @@ Transforms Strava API run data into premium, share-ready graphics: choose a run,
 
 `SwiftUI` `@Observable` `MapKit` `Strava API` `Interactive Photo Editor` `Gestures & Stickers` `async/await` `Keychain` `iOS 26+`
 
-https://github.com/user-attachments/assets/0beaf45c-fbfe-4d19-985d-9008ee2cae51
+# Stride Demo
+https://github.com/user-attachments/assets/33605762-77ba-4292-964b-517586f2a8a4
+
+# Stride Screenshots
+<img width="563" height="1218" alt="8" src="https://github.com/user-attachments/assets/6017073e-2c00-4f4a-a265-d0c7abea4cd9" />
+<img width="563" height="1218" alt="7" src="https://github.com/user-attachments/assets/97b69dae-2903-4433-8af2-107c11dff4de" />
+<img width="563" height="1218" alt="6" src="https://github.com/user-attachments/assets/d42142d5-6f8f-40d5-b5b4-184c88062106" />
+<img width="563" height="1218" alt="5" src="https://github.com/user-attachments/assets/08d40b5e-ee57-4b69-a5f3-08e1376b10f4" />
+<img width="563" height="1218" alt="4" src="https://github.com/user-attachments/assets/d81e3672-24d0-43b3-9918-661389d1cb1a" />
+<img width="563" height="1218" alt="3" src="https://github.com/user-attachments/assets/c7cbf4a3-d53c-41d3-af19-c8ca14acb86c" />
+<img width="563" height="1218" alt="2" src="https://github.com/user-attachments/assets/8741b1ef-d779-46ec-a4a3-c6ba29a7297b" />
+<img width="563" height="1218" alt="1" src="https://github.com/user-attachments/assets/94c0ff69-9398-48fc-81e1-3c5a22565137" />
 
 ---
 
