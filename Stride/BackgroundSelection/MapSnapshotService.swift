@@ -30,7 +30,10 @@ struct MapSnapshotService {
         options.region = region
         options.size = size
         options.scale = 1
-        options.mapType = .mutedStandard
+        let config = MKStandardMapConfiguration(emphasisStyle: .muted)
+        config.pointOfInterestFilter = .excludingAll
+        config.showsTraffic = false
+        options.preferredConfiguration = config
 
         let snapshotter = MKMapSnapshotter(options: options)
         return await withCheckedContinuation { continuation in
