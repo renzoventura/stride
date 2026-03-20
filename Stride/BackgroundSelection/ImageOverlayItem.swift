@@ -12,13 +12,16 @@ import UIKit
 struct ImageOverlayItem: Identifiable {
     let id: UUID
     var image: UIImage
+    /// Optional full-opacity layer drawn on top of `image` (e.g. map polyline over a faded map tile).
+    var topImage: UIImage?
     var position: CGPoint
     var scale: CGFloat
     var opacity: Double
 
-    init(id: UUID = UUID(), image: UIImage, position: CGPoint, scale: CGFloat = 1, opacity: Double = 1) {
+    init(id: UUID = UUID(), image: UIImage, topImage: UIImage? = nil, position: CGPoint, scale: CGFloat = 1, opacity: Double = 1) {
         self.id = id
         self.image = image
+        self.topImage = topImage
         self.position = position
         self.scale = scale
         self.opacity = opacity

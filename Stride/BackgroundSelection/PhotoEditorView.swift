@@ -183,22 +183,23 @@ struct PhotoEditorView: View {
         imageOverlays[index].scale = scale
     }
 
-    private func addImageOverlay(image: UIImage, opacity: Double = 1) {
+    private func addImageOverlay(image: UIImage, topImage: UIImage? = nil, opacity: Double = 1) {
         let center = CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
         let initialScale = canvasSize.width > 0 ? (canvasSize.width * 0.5) / 300 : 1
-        imageOverlays.append(ImageOverlayItem(image: image, position: center, scale: initialScale, opacity: opacity))
+        imageOverlays.append(ImageOverlayItem(image: image, topImage: topImage, position: center, scale: initialScale, opacity: opacity))
     }
 
     private func addMapOverlay(size: CGSize) {
         guard let polyline = runItem.polyline, !polyline.isEmpty else { return }
         Task {
-            guard let mapImage = await MapSnapshotService.makeSnapshot(
+            guard let layers = await MapSnapshotService.makeOverlaySnapshot(
                 polyline: polyline,
                 size: size,
-                routeLineWidth: 4,
-                mapOpacity: 0.5
+                routeLineWidth: 4
             ) else { return }
-            await MainActor.run { addImageOverlay(image: mapImage) }
+            await MainActor.run {
+                addImageOverlay(image: layers.base, topImage: layers.polyline, opacity: 0.5)
+            }
         }
     }
 

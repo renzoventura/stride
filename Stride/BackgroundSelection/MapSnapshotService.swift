@@ -10,7 +10,18 @@ import UIKit
 
 struct MapSnapshotService {
     /// Generates a map snapshot with the route drawn on it at the given output size.
-    static func makeSnapshot(polyline: String, size: CGSize, routeLineWidth: CGFloat = 4, mapOpacity: CGFloat = 1) async -> UIImage? {
+    /// Single-image snapshot (background picker). Polyline baked in at full opacity.
+    static func makeSnapshot(polyline: String, size: CGSize, routeLineWidth: CGFloat = 4) async -> UIImage? {
+        guard let (base, _) = await makeLayeredSnapshot(polyline: polyline, size: size, routeLineWidth: routeLineWidth) else { return nil }
+        return base
+    }
+
+    /// Two-image snapshot for canvas overlays: base map (no polyline) + polyline-only image.
+    static func makeOverlaySnapshot(polyline: String, size: CGSize, routeLineWidth: CGFloat = 4) async -> (base: UIImage, polyline: UIImage)? {
+        await makeLayeredSnapshot(polyline: polyline, size: size, routeLineWidth: routeLineWidth)
+    }
+
+    private static func makeLayeredSnapshot(polyline: String, size: CGSize, routeLineWidth: CGFloat) async -> (UIImage, UIImage)? {
         let coords = PolylineDecoder.decode(polyline)
         guard !coords.isEmpty else { return nil }
 
@@ -24,11 +35,10 @@ struct MapSnapshotService {
         let snapshotter = MKMapSnapshotter(options: options)
         return await withCheckedContinuation { continuation in
             snapshotter.start { snapshot, _ in
-                guard let snapshot else {
-                    continuation.resume(returning: nil)
-                    return
-                }
-                continuation.resume(returning: drawRoute(on: snapshot, coordinates: coords, lineWidth: routeLineWidth, mapOpacity: mapOpacity))
+                guard let snapshot else { continuation.resume(returning: nil); return }
+                let base = drawMapOnly(on: snapshot)
+                let polylineImage = drawPolylineOnly(on: snapshot, coordinates: coords, lineWidth: routeLineWidth)
+                continuation.resume(returning: (base, polylineImage))
             }
         }
     }
@@ -56,20 +66,27 @@ struct MapSnapshotService {
         return MKCoordinateRegion(center: center, span: span)
     }
 
-    private static func drawRoute(
-        on snapshot: MKMapSnapshotter.Snapshot,
-        coordinates: [CLLocationCoordinate2D],
-        lineWidth: CGFloat,
-        mapOpacity: CGFloat
-    ) -> UIImage {
+    /// Map tiles + dark overlay, no polyline.
+    private static func drawMapOnly(on snapshot: MKMapSnapshotter.Snapshot) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: snapshot.image.size)
         return renderer.image { context in
-            context.cgContext.setAlpha(mapOpacity)
             snapshot.image.draw(at: .zero)
-            context.cgContext.setAlpha(1)
             let rect = CGRect(origin: .zero, size: snapshot.image.size)
             context.cgContext.setFillColor(CGColor(red: 0.1, green: 0.1, blue: 0.12, alpha: 0.4))
             context.cgContext.fill(rect)
+        }
+    }
+
+    /// Transparent image with only the polyline drawn on it.
+    private static func drawPolylineOnly(
+        on snapshot: MKMapSnapshotter.Snapshot,
+        coordinates: [CLLocationCoordinate2D],
+        lineWidth: CGFloat
+    ) -> UIImage {
+        let format = UIGraphicsImageRendererFormat()
+        format.opaque = false
+        let renderer = UIGraphicsImageRenderer(size: snapshot.image.size, format: format)
+        return renderer.image { context in
             guard coordinates.count >= 2 else { return }
             let points = coordinates.map { snapshot.point(for: $0) }
             context.cgContext.setStrokeColor(CGColor(red: 1, green: 0.45, blue: 0, alpha: 1))

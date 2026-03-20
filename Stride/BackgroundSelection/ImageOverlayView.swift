@@ -30,13 +30,20 @@ struct ImageOverlayView: View {
         )
         let aspectRatio = item.image.size.height > 0 ? item.image.size.width / item.image.size.height : 1
 
-        Image(uiImage: item.image)
-            .resizable()
-            .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
-            .opacity(item.opacity)
-            .scaleEffect(item.scale)
-            .position(effectivePosition)
+        ZStack {
+            Image(uiImage: item.image)
+                .resizable()
+                .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
+                .opacity(item.opacity)
+            if let top = item.topImage {
+                Image(uiImage: top)
+                    .resizable()
+                    .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
+        .scaleEffect(item.scale)
+        .position(effectivePosition)
             .highPriorityGesture(
                 MagnificationGesture()
                     .onChanged { value in
@@ -70,13 +77,20 @@ struct ImageOverlayDrawingView: View {
 
     var body: some View {
         let aspectRatio = item.image.size.height > 0 ? item.image.size.width / item.image.size.height : 1
-        Image(uiImage: item.image)
-            .resizable()
-            .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
-            .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
-            .opacity(item.opacity)
-            .scaleEffect(item.scale)
-            .position(item.position)
+        ZStack {
+            Image(uiImage: item.image)
+                .resizable()
+                .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
+                .opacity(item.opacity)
+            if let top = item.topImage {
+                Image(uiImage: top)
+                    .resizable()
+                    .frame(width: imageOverlayBaseWidth, height: imageOverlayBaseWidth / aspectRatio)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
+        .scaleEffect(item.scale)
+        .position(item.position)
     }
 }
 
