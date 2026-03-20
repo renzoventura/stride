@@ -20,9 +20,10 @@ struct EditingCanvasView: View {
     @Binding var offset: CGSize
     let stickers: [StickerItem]
     let imageOverlays: [ImageOverlayItem]
-    let onStickerDragStarted: () -> Void
+    let activeOverlayID: UUID?
+    let onStickerDragStarted: (UUID) -> Void
     let onStickerUpdate: (UUID, CGPoint, CGFloat) -> Void
-    let onImageOverlayDragStarted: () -> Void
+    let onImageOverlayDragStarted: (UUID) -> Void
     let onImageOverlayUpdate: (UUID, CGPoint, CGFloat) -> Void
     let onCanvasSizeChange: (CGSize) -> Void
 
@@ -72,6 +73,7 @@ struct EditingCanvasView: View {
                                 onStickerUpdate(sticker.id, newPosition, newScale)
                             }
                         )
+                        .zIndex(sticker.id == activeOverlayID ? 1000 : 0)
                     }
                     ForEach(imageOverlays) { overlay in
                         ImageOverlayView(
@@ -81,6 +83,7 @@ struct EditingCanvasView: View {
                                 onImageOverlayUpdate(overlay.id, newPosition, newScale)
                             }
                         )
+                        .zIndex(overlay.id == activeOverlayID ? 1000 : 0)
                     }
                 }
             }

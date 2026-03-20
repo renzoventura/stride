@@ -12,7 +12,7 @@ import SwiftUI
 struct StickerOverlayView: View {
     let sticker: StickerItem
     let canvasSize: CGSize
-    let onDragStarted: () -> Void
+    let onDragStarted: (UUID) -> Void
     let onUpdate: (CGPoint, CGFloat) -> Void
 
     private let minScale: CGFloat = 0.4
@@ -59,7 +59,7 @@ struct StickerOverlayView: View {
                     .onChanged { value in
                         if !isDragging {
                             isDragging = true
-                            onDragStarted()
+                            onDragStarted(sticker.id)
                         }
                         dragOffset = value.translation
                     }

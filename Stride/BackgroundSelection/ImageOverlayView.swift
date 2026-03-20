@@ -13,7 +13,7 @@ private let imageOverlayBaseWidth: CGFloat = 300
 
 struct ImageOverlayView: View {
     let item: ImageOverlayItem
-    let onDragStarted: () -> Void
+    let onDragStarted: (UUID) -> Void
     let onUpdate: (CGPoint, CGFloat) -> Void
 
     private let minScale: CGFloat = 0.2
@@ -58,7 +58,7 @@ struct ImageOverlayView: View {
                     .onChanged { value in
                         if !isDragging {
                             isDragging = true
-                            onDragStarted()
+                            onDragStarted(item.id)
                         }
                         dragOffset = value.translation
                     }
